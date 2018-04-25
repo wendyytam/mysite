@@ -1,10 +1,8 @@
-<html>
-    <head>
-        <title>About Wendy</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-    </head>
-    <body>
-        <div class="container">
+{% extends "base.html" %}
+
+{% block title%}About Me{% endblock %}
+
+{% block content %}
         <h1>About me</h1>
         <table class="table">
         <img src='static/images/2018-04-04 14:36:48.004.JPG' alt='food'></img>
@@ -22,6 +20,4 @@
         <h2>Check out my reviews at:</h2>
         <p> <a href='https://wendytlovesfood.yelp.com'>https://wendytlovesfood.yelp.com</a> </p>
     </body>
-    </div>
-    </table>
-</html>
+{% endblock %}
