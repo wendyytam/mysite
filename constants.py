@@ -1,6 +1,8 @@
+
 import course
 import song
 
+'''
 COURSES = [
     course.Course(period=1,
                   name='Intro to Computer Science',
@@ -32,6 +34,7 @@ COURSES = [
                   teacher_name='Ms. Belli',
                   resource_name='FAFSA',
                   resource_url='https://fafsa.ed.gov/')]
+'''
 
 TOP_TEN_SONGS = [
     song.Song(  title='Small Bump',
@@ -64,5 +67,4 @@ TOP_TEN_SONGS = [
     song.Song(  title='Knock You Down',
                 artist_name='Keri Hilson ft. Kanye West, Ne-Yo',
                 youtube_url='https://www.youtube.com/watch?v=p_RqWocthcc')]
-
 
