@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-    <div class="container">
-<p>This is going to be an amazing microblog soon!</p>
-    </div>
+<div class="container">
+{% if current_user.is_authenticated %}
+<p>Welcome, {{ current_user.username}}!</p>
+{% else %}
+<p>Welcome to MySite!</p>
+{% endif %}
+<h3>Recent posts from users</h3>
+{% for post in posts %}
+<p>{{ post.body }}</p>
+{% endfor %}
+</div>
 {% endblock %}
