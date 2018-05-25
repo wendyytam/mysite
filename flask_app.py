@@ -19,6 +19,7 @@ from wtforms.validators import ValidationError
 from flask import flash
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
 from datetime import datetime
+from flask_gravatar import Gravatar
 
 #import constants
 
@@ -30,6 +31,13 @@ login = LoginManager(app)
 
 Bootstrap(app)
 SSLify(app)
+gravatar = Gravatar(app,
+                    size=100,
+                    rating='g',
+                    default='retro',
+                    force_default=False,
+                    use_ssl=False,
+                    base_url=None)
 
 nav = Nav(app)
 @nav.navigation('mysite_navbar')
@@ -38,6 +46,7 @@ def create_navbar():
     login_view = View('Login', 'login')
     logout_view = View('Logout', 'logout')
     posts_view = View('Posts', 'posts')
+    updates_view = View('Bucket List', 'bucket_list')
     register_view = View('Register', 'register')
     about_me_view = View('About Me', 'about_me')
     class_schedule_view = View('Class Schedule', 'class_schedule')
@@ -47,7 +56,7 @@ def create_navbar():
                              class_schedule_view,
                              top_ten_songs_view)
     if current_user.is_authenticated:
-        return Navbar('MySite', home_view, posts_view, misc_subgroup, logout_view)
+        return Navbar('MySite', home_view, posts_view, updates_view, misc_subgroup, logout_view)
     else:
         return Navbar('MySite', home_view, misc_subgroup, login_view, register_view)
 
@@ -105,6 +114,16 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+class Update(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(280))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class UpdateForm(FlaskForm):
+    message = StringField('Message', validators=[InputRequired(), Length(max=280)])
+    submit = SubmitField('Update')
 
 @login.user_loader
 def load_user(user_id):
@@ -175,6 +194,19 @@ def logout():
 def top_ten_songs():
     songs=Song.query.all()
     return render_template('top_ten_songs.html', songs=songs)
+
+@app.route('/bucket_list', methods=['GET', 'UPDATE'])
+def bucket_list():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    form = PostForm()
+    updates = Update.query.filter_by(user_id=current_user.id).all()
+    if form.validate_on_submit():
+        new_update = Update(user_id=current_user.id, body=form.message.data)
+        db.session.add(new_update)
+        db.session.commit()
+        updates.append(new_update)
+    return render_template('bucket_list.html', form=form, updates=updates)
 
 if __name__ == '__main__':
   db.create_all()

@@ -4,6 +4,7 @@
 <div class="container">
 {% if current_user.is_authenticated %}
 <p>Welcome, {{ current_user.username}}!</p>
+<p> <img src="{{ current_user.email | gravatar }}"> </p>
 {% else %}
 <p>Welcome to MySite!</p>
 {% endif %}
