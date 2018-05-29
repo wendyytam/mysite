@@ -122,7 +122,7 @@ class Update(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class UpdateForm(FlaskForm):
-    message = StringField('Message', validators=[InputRequired(), Length(max=280)])
+    message = StringField('I want to...', validators=[InputRequired(), Length(max=280)])
     submit = SubmitField('Update')
 
 @login.user_loader
@@ -195,11 +195,11 @@ def top_ten_songs():
     songs=Song.query.all()
     return render_template('top_ten_songs.html', songs=songs)
 
-@app.route('/bucket_list', methods=['GET', 'UPDATE'])
+@app.route('/bucket_list', methods=['GET', 'POST'])
 def bucket_list():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-    form = PostForm()
+    form = UpdateForm()
     updates = Update.query.filter_by(user_id=current_user.id).all()
     if form.validate_on_submit():
         new_update = Update(user_id=current_user.id, body=form.message.data)
